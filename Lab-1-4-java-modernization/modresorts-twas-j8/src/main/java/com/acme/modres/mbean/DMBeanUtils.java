@@ -1,3 +1,4 @@
+// Assisted by watsonx Code Assistant
 package com.acme.modres.mbean;
 
 import java.util.logging.Level;
@@ -25,13 +26,22 @@ public final class DMBeanUtils {
         String type = opMetadata.getType();
         int impact = opMetadata.getImpact();
 
-        MBeanOperationInfo opInfo = new MBeanOperationInfo(name, desc, /* signature */ null, type, impact, /*
+        try {
+          MBeanOperationInfo opInfo = new MBeanOperationInfo(name, desc, /* signature */ null, type, impact, /*
                                                                                                             * descriptor
                                                                                                             */ null);
-        ops[i++] = opInfo;
+          ops[i++] = opInfo;
+        } catch (IllegalArgumentException e) {
+          logger.log(Level.WARNING, "Impact level specified is not valid. Using impact level UNKNOWN");
+          MBeanOperationInfo opInfo = new MBeanOperationInfo(name, desc, /* signature */ null, type, MBeanOperationInfo.UNKNOWN, /*
+                                                                                                                                    * descriptor
+                                                                                                                                    */ null);
+          ops[i++] = opInfo;
+        }
       }
     }
 
     return ops;
   }
 }
+
